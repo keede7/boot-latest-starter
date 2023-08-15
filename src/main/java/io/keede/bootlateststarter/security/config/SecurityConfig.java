@@ -19,31 +19,31 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults())
-                .authorizeHttpRequests(authorizeRequest ->
-                        authorizeRequest
-                                .requestMatchers(
-                                        antMatcher("/auth/**")
-                                ).authenticated()
-                                .requestMatchers(
-                                        antMatcher("/h2-console/**")
-                                ).permitAll()
-                )
-                .headers(
-                        headersConfigurer ->
-                                headersConfigurer
-                                        .frameOptions(
-                                                HeadersConfigurer.FrameOptionsConfig::sameOrigin
-                                        )
-                                        .contentSecurityPolicy( policyConfig ->
-                                                policyConfig.policyDirectives(
-                                                "script-src 'self'; " + "img-src 'self'; " +
-                                                        "font-src 'self' data:; " + "default-src 'self'; " +
-                                                        "frame-src 'self'"
-                                                )
-                                        )
-                );
+            .csrf(AbstractHttpConfigurer::disable)
+            .formLogin(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(authorizeRequest ->
+                    authorizeRequest
+                            .requestMatchers(
+                                    antMatcher("/auth/**")
+                            ).authenticated()
+                            .requestMatchers(
+                                    antMatcher("/h2-console/**")
+                            ).permitAll()
+            )
+            .headers(
+                    headersConfigurer ->
+                            headersConfigurer
+                                    .frameOptions(
+                                            HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                                    )
+                                    .contentSecurityPolicy( policyConfig ->
+                                            policyConfig.policyDirectives(
+                                            "script-src 'self'; " + "img-src 'self'; " +
+                                                    "font-src 'self' data:; " + "default-src 'self'; " +
+                                                    "frame-src 'self'"
+                                            )
+                                    )
+            );
 
         return http.build();
     }
