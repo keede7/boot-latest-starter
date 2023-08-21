@@ -27,4 +27,16 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
 }

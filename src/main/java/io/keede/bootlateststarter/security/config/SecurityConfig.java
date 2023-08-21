@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,10 +24,18 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @Configuration
 public class SecurityConfig {
 
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(final UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         AuthenticationManagerBuilder sharedObject = http.getSharedObject(AuthenticationManagerBuilder.class);
+
+        sharedObject.userDetailsService(this.userDetailsService);
         AuthenticationManager authenticationManager = sharedObject.build();
 
         http.authenticationManager(authenticationManager);

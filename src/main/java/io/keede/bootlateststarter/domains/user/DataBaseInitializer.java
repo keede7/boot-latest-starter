@@ -29,7 +29,10 @@ public class DataBaseInitializer {
                 passwordEncoder.encode("1212")
         );
 
-        userRepository.save(user);
+        User save = userRepository.save(user);
+        System.out.println("save.getId() = " + save.getId());
+        System.out.println("save = " + save.getUsername());
+        System.out.println("save = " + save.getPassword());
     }
 
 }
