@@ -25,7 +25,7 @@ public class DataBaseInitializer {
     @PostConstruct
     void init() {
         User user = new User(
-                "test@naver.com",
+                "tester",
                 passwordEncoder.encode("1212")
         );
 
