@@ -9,12 +9,22 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+* @author keede
+* Created on 2023/08/23
+*/
 public class AuthenticationDetail extends User {
 
     private String username;
 
     public AuthenticationDetail(String username, String password) {
-        this(username, password, Collections.singletonList(new SimpleGrantedAuthority("ROLE_MEMBER")));
+        this(
+                username,
+                password,
+                Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_MEMBER")
+                )
+        );
         this.username = username;
     }
 

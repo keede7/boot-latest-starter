@@ -48,10 +48,11 @@ public class SecurityConfig {
                     authorizeRequest
                             .requestMatchers(
                                     antMatcher("/auth/**")
-                            ).authenticated()
+                            ).hasRole("MEMBER")
                             .requestMatchers(
                                     antMatcher("/h2-console/**")
                             ).permitAll()
+                            .anyRequest().permitAll()
             )
             .addFilterAt(
                     this.abstractAuthenticationProcessingFilter(authenticationManager),
