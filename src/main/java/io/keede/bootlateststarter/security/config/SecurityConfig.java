@@ -54,13 +54,6 @@ public class SecurityConfig {
                                     .frameOptions(
                                             HeadersConfigurer.FrameOptionsConfig::sameOrigin
                                     )
-                                    .contentSecurityPolicy( policyConfig ->
-                                            policyConfig.policyDirectives(
-                                            "script-src 'self'; " + "img-src 'self'; " +
-                                                    "font-src 'self' data:; " + "default-src 'self'; " +
-                                                    "frame-src 'self'"
-                                            )
-                                    )
             );
 
         return http.build();
