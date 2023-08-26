@@ -18,6 +18,7 @@ public class SampleController {
     @GetMapping("/")
     public String index() {
         System.out.println("SecurityContextHolder.getContext().getAuthentication() = " + SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("SecurityContextHolder.getContext() = " + SecurityContextHolder.getContext());
         return "index";
     }
 

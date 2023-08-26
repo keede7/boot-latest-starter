@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 import java.io.IOException;
 
@@ -30,8 +31,10 @@ import java.io.IOException;
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public LoginAuthenticationFilter(final String defaultFilterProcessesUrl,
-                                     final AuthenticationManager authenticationManager) {
+                                     final AuthenticationManager authenticationManager,
+                                     final SessionAuthenticationStrategy sessionAuthenticationStrategy) {
         super(defaultFilterProcessesUrl, authenticationManager);
+        setSessionAuthenticationStrategy(sessionAuthenticationStrategy);
     }
 
     @Override

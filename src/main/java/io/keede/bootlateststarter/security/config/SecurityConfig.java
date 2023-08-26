@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -14,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -36,6 +39,10 @@ public class SecurityConfig {
         AuthenticationManagerBuilder sharedObject = http.getSharedObject(AuthenticationManagerBuilder.class);
 
         sharedObject.userDetailsService(this.userDetailsService);
+
+        SessionAuthenticationStrategy sessionAuthenticationStrategy = http
+                .getSharedObject(CompositeSessionAuthenticationStrategy.class);
+
         AuthenticationManager authenticationManager = sharedObject.build();
 
         http.authenticationManager(authenticationManager);
@@ -55,7 +62,7 @@ public class SecurityConfig {
                             .anyRequest().permitAll()
             )
             .addFilterAt(
-                    this.abstractAuthenticationProcessingFilter(authenticationManager),
+                    this.abstractAuthenticationProcessingFilter(authenticationManager, sessionAuthenticationStrategy),
                     UsernamePasswordAuthenticationFilter.class)
             .headers(
                     headersConfigurer ->
@@ -63,15 +70,18 @@ public class SecurityConfig {
                                     .frameOptions(
                                             HeadersConfigurer.FrameOptionsConfig::sameOrigin
                                     )
-            );
+            )
+        ;
 
         return http.build();
     }
 
-    public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(final AuthenticationManager authenticationManager) {
+    public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(final AuthenticationManager authenticationManager,
+                                                                                         final SessionAuthenticationStrategy sessionAuthenticationStrategy) {
         return new LoginAuthenticationFilter(
                 "/api/login",
-                authenticationManager
+                authenticationManager,
+                sessionAuthenticationStrategy
         );
     }
 
