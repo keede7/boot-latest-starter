@@ -8,6 +8,7 @@ package io.keede.bootlateststarter.security.filter;
  */
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,12 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.io.IOException;
 
@@ -30,6 +36,13 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     public LoginAuthenticationFilter(final String defaultFilterProcessesUrl,
                                      final AuthenticationManager authenticationManager) {
         super(defaultFilterProcessesUrl, authenticationManager);
+        // 로그인 이후 Context 생성 전략 설정
+        setSecurityContextRepository(
+                new DelegatingSecurityContextRepository(
+                        new HttpSessionSecurityContextRepository(),
+                        new RequestAttributeSecurityContextRepository()
+                )
+        );
     }
 
     @Override
@@ -57,4 +70,15 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
             String username,
             String password
     ){}
+
+
+
+//    @Override
+//    protected void successfulAuthentication(HttpServletRequest request,
+//                                            HttpServletResponse response,
+//                                            FilterChain chain,
+//                                            Authentication authResult) throws IOException, ServletException {
+//        SecurityContextHolder.getContext().setAuthentication(authResult); // 이 부분을 추가
+//        super.successfulAuthentication(request, response, chain, authResult);
+//    }
 }

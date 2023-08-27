@@ -1,3 +1,4 @@
+  # 스프링 부트 2.5.x 버전부터는 spring.datasource.initialization-mode 옵션이 Deprecated
 spring:
   datasource:
     hikari:
@@ -10,3 +11,12 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    generate-ddl: true
+    properties:
+      hibernate:
+        format_sql: true
