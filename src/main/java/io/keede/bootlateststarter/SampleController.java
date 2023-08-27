@@ -1,6 +1,7 @@
 package io.keede.bootlateststarter;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class SampleController {
 
     @GetMapping("/")
-    public String index() {
+    public String index(HttpServletRequest request) {
         System.out.println("SecurityContextHolder.getContext().getAuthentication() = " + SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("ss : " +request.getSession().getAttribute("SPRING_SECURITY_CONTEXT"));
         return "index";
     }
 
