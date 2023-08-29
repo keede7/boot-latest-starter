@@ -21,5 +21,7 @@
     - [Velog](https://velog.io/@kide77/Spring-Boot-3.x-Security-Rest-API-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%9A%94%EC%B2%AD%EB%B6%80-%EA%B5%AC%ED%98%84-1)
     - [Branch](https://github.com/keede7/boot-latest-starter/tree/filter/login%231)
 
+3) `REST` 로그인의 문제와 해결방안
+   - [Velog](https://velog.io/@kide77/Security-6.1.x-Rest-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%84%B1%EA%B3%B5%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0-%EC%8A%A4%EC%95%95-%EC%A3%BC%EC%9D%98)
+   - [Branch](https://github.com/keede7/boot-latest-starter/tree/filter/login%232)
 
-### Docker Compose
