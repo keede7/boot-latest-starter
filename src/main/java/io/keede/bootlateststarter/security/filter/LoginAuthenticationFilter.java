@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
@@ -30,8 +31,10 @@ import java.io.IOException;
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     public LoginAuthenticationFilter(final String defaultFilterProcessesUrl,
-                                     final AuthenticationManager authenticationManager) {
+                                     final AuthenticationManager authenticationManager,
+                                     final AuthenticationSuccessHandler authenticationSuccessHandler) {
         super(defaultFilterProcessesUrl, authenticationManager);
+        setAuthenticationSuccessHandler(authenticationSuccessHandler);
         // 로그인 이후 Context 생성 전략 설정
         setSecurityContextRepository(
                 new DelegatingSecurityContextRepository(
@@ -67,14 +70,4 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
             String password
     ){}
 
-
-
-//    @Override
-//    protected void successfulAuthentication(HttpServletRequest request,
-//                                            HttpServletResponse response,
-//                                            FilterChain chain,
-//                                            Authentication authResult) throws IOException, ServletException {
-//        SecurityContextHolder.getContext().setAuthentication(authResult); // 이 부분을 추가
-//        super.successfulAuthentication(request, response, chain, authResult);
-//    }
 }

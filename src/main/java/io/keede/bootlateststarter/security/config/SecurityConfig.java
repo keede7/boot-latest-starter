@@ -1,6 +1,7 @@
 package io.keede.bootlateststarter.security.config;
 
 import io.keede.bootlateststarter.security.filter.LoginAuthenticationFilter;
+import io.keede.bootlateststarter.security.handler.BootAuthenticationSuccessHandler;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
@@ -55,7 +57,10 @@ public class SecurityConfig {
                             .anyRequest().permitAll()
             )
             .addFilterAt(
-                    this.abstractAuthenticationProcessingFilter(authenticationManager),
+                    this.abstractAuthenticationProcessingFilter(
+                            authenticationManager,
+                            authenticationSuccessHandler()
+                    ),
                     UsernamePasswordAuthenticationFilter.class)
             .headers(
                     headersConfigurer ->
@@ -68,10 +73,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-    public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(final AuthenticationManager authenticationManager) {
+    public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(
+            final AuthenticationManager authenticationManager,
+            final AuthenticationSuccessHandler authenticationSuccessHandler
+    ) {
         return new LoginAuthenticationFilter(
                 "/api/login",
-                authenticationManager
+                authenticationManager,
+                authenticationSuccessHandler
         );
     }
 
@@ -84,6 +93,10 @@ public class SecurityConfig {
                     .requestMatchers(
                             PathRequest.toStaticResources().atCommonLocations()
                     );
+    }
+
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new BootAuthenticationSuccessHandler();
     }
 
 }
