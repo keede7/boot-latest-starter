@@ -47,6 +47,15 @@ public class SecurityConfig {
 //            .formLogin(Customizer.withDefaults())
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorizeRequest ->
+                    /*
+                        h2 자동 설정이 추가적으로 들어갈 경우, AbstractRequestMatcherRegistry 의 requestMatcher가 동작한다.
+                        여기서 h2관련 서블릿? 설정이 추가되는데 이부분에서 예외가 발생한다.
+                        자세한건 더 알아봐야한다.
+                        AntPathRequestMatcher.antMatcher 를 사용하면 위의 문제는 쉽게 해결이된다.
+                        하지만 requestMatcher("경로") 를 쓰게 되면 위에 언급한 문제가 발생한다.
+                        만약 다른 설정들도 추가로 존재하게 됐을 때 이 문제가 발생하는지 확인이 된다면
+                        AntPathRequestMatcher.antMatcher를 쓰는 방향이 조금 더 개발에 도움이 될까 싶다.
+                     */
                     authorizeRequest
                             .requestMatchers(
                                     antMatcher("/auth/**")
