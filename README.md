@@ -28,3 +28,8 @@
 4) `REST` 로그인 성공 구현
    - [Velog](https://velog.io/@kide77/Security-6.1.2-Rest-API-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%84%B1%EA%B3%B5-%EC%B2%98%EB%A6%AC-%EA%B5%AC%ED%98%84)
    - [Branch](https://github.com/keede7/boot-latest-starter/tree/login/success%231)
+
+5) `REST` 로그아웃 구현
+   - [Velog](https://velog.io/@kide77/Security-6.1.2-%EB%A1%9C%EA%B7%B8%EC%95%84%EC%9B%83-%EA%B5%AC%ED%98%84)
+   - [Branch](https://github.com/keede7/boot-latest-starter/tree/logout/success%231)
+  
