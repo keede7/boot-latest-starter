@@ -2,11 +2,13 @@ package io.keede.bootlateststarter.security.config;
 
 import io.keede.bootlateststarter.security.filter.LoginAuthenticationFilter;
 import io.keede.bootlateststarter.security.handler.BootAuthenticationSuccessHandler;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +22,10 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -75,9 +81,18 @@ public class SecurityConfig {
                             authenticationSuccessHandler()
                     ),
                     UsernamePasswordAuthenticationFilter.class)
-            .logout(logoutConfig -> {
-                logoutConfig.logoutUrl("/api/logout");
-            })
+            .logout(logoutConfig ->
+                    logoutConfig
+                    .logoutUrl("/api/logout")
+                    .logoutSuccessHandler(
+                            (request, response, authentication) -> {
+                        System.out.println("로그아웃 성공");
+
+                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                        response.getWriter().println("로그아웃 성공!");
+                    })
+            )
             .headers(
                     headersConfigurer ->
                             headersConfigurer
