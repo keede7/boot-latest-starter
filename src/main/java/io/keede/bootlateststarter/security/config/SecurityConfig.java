@@ -1,6 +1,7 @@
 package io.keede.bootlateststarter.security.config;
 
 import io.keede.bootlateststarter.security.filter.LoginAuthenticationFilter;
+import io.keede.bootlateststarter.security.handler.BootAuthenticationEntryPoint;
 import io.keede.bootlateststarter.security.handler.BootAuthenticationSuccessHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -96,6 +98,9 @@ public class SecurityConfig {
                         response.getWriter().println("로그아웃 성공!");
                     })
             )
+            .exceptionHandling(exceptionConfigurer ->
+                    exceptionConfigurer.authenticationEntryPoint(this.authenticationEntryPoint())
+            )
             .headers(
                     headersConfigurer ->
                             headersConfigurer
@@ -131,6 +136,10 @@ public class SecurityConfig {
 
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new BootAuthenticationSuccessHandler();
+    }
+
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new BootAuthenticationEntryPoint();
     }
 
 }
