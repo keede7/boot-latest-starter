@@ -73,6 +73,9 @@ public class SecurityConfig {
                             .requestMatchers(
                                     antMatcher("/h2-console/**")
                             ).permitAll()
+                            .requestMatchers(
+                                    antMatcher("/admin/**")
+                            ).hasRole("ADMIN")
                             .anyRequest().permitAll()
             )
             .addFilterAt(
