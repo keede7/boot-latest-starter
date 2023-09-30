@@ -3,6 +3,7 @@ package io.keede.bootlateststarter.security.config;
 import io.keede.bootlateststarter.security.filter.LoginAuthenticationFilter;
 import io.keede.bootlateststarter.security.handler.BootAuthenticationEntryPoint;
 import io.keede.bootlateststarter.security.handler.BootAuthenticationSuccessHandler;
+import io.keede.bootlateststarter.security.handler.BootLogoutSuccessHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -89,14 +90,7 @@ public class SecurityConfig {
             .logout(logoutConfig ->
                     logoutConfig
                     .logoutUrl("/api/logout")
-                    .logoutSuccessHandler(
-                            (request, response, authentication) -> {
-                        System.out.println("로그아웃 성공");
-
-                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                        response.getWriter().println("로그아웃 성공!");
-                    })
+                    .logoutSuccessHandler(this.logoutSuccessHandler())
             )
             .exceptionHandling(exceptionConfigurer ->
                     exceptionConfigurer.authenticationEntryPoint(this.authenticationEntryPoint())
@@ -136,6 +130,10 @@ public class SecurityConfig {
 
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new BootAuthenticationSuccessHandler();
+    }
+
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new BootLogoutSuccessHandler();
     }
 
     public AuthenticationEntryPoint authenticationEntryPoint() {
