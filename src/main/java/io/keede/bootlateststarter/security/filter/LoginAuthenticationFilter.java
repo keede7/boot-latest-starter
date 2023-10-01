@@ -1,12 +1,5 @@
 package io.keede.bootlateststarter.security.filter;
 
-
-
-/*
- 가장 우선적으로 Rest방식으로 로그인을 해야하기 때문에,
- 로그인 요청 데이터를 변환해서 인증방식까지 도달시켜야 합니다.
- */
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;

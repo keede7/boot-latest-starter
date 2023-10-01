@@ -32,4 +32,6 @@
 5) `REST` 로그아웃 구현
    - [Velog](https://velog.io/@kide77/Security-6.1.2-%EB%A1%9C%EA%B7%B8%EC%95%84%EC%9B%83-%EA%B5%AC%ED%98%84)
    - [Branch](https://github.com/keede7/boot-latest-starter/tree/logout/success%231)
-  
+
+6) 인증실패 처리 구현
+   - [Branch](https://github.com/keede7/boot-latest-starter/tree/filter/entryPoint)
