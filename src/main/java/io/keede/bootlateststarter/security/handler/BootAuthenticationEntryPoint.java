@@ -10,6 +10,10 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+/**
+* @author keede
+* Created on 2023/09/26
+*/
 public class BootAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
