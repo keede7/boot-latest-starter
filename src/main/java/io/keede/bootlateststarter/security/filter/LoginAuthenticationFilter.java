@@ -18,14 +18,19 @@ import org.springframework.security.web.context.RequestAttributeSecurityContextR
 import java.io.IOException;
 
 /**
-* @author keede
-* Created on 2023/08/15
-*/
+ * 로그인 담당 필터
+ * @author keede
+ * Created on 2023/08/15
+ *
+ * 로그인 요청에 대해 가장 먼저 처리한다.
+ */
 public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-    public LoginAuthenticationFilter(final String defaultFilterProcessesUrl,
-                                     final AuthenticationManager authenticationManager,
-                                     final AuthenticationSuccessHandler authenticationSuccessHandler) {
+    public LoginAuthenticationFilter(
+            final String defaultFilterProcessesUrl,
+            final AuthenticationManager authenticationManager,
+            final AuthenticationSuccessHandler authenticationSuccessHandler
+    ) {
         super(defaultFilterProcessesUrl, authenticationManager);
         setAuthenticationSuccessHandler(authenticationSuccessHandler);
         // 로그인 이후 Context 생성 전략 설정
@@ -38,9 +43,10 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response)
-            throws AuthenticationException, IOException {
+    public Authentication attemptAuthentication(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws AuthenticationException, IOException {
 
         String method = request.getMethod();
 
@@ -50,17 +56,21 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 
         ServletInputStream inputStream = request.getInputStream();
 
-        LoginRequestDto loginRequestDto = new ObjectMapper().readValue(inputStream, LoginRequestDto.class);
+        LoginRequestDto loginRequestDto = new ObjectMapper()
+                .readValue(inputStream, LoginRequestDto.class);
 
-        return this.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequestDto.username,
-                loginRequestDto.password
-        ));
+        return this.getAuthenticationManager().authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequestDto.username,
+                        loginRequestDto.password
+                )
+        );
     }
 
     public record LoginRequestDto(
             String username,
             String password
-    ){}
+    ) {
+    }
 
 }

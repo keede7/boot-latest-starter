@@ -10,15 +10,19 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
-* @author keede
-* Created on 2023/09/30
-*/
+ * 로그아웃 성공 이후 처리에 대한 핸들러
+ *
+ * @author keede
+ * Created on 2023/09/30
+ */
 public class BootLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
-    public void onLogoutSuccess(final HttpServletRequest request,
-                                final HttpServletResponse response,
-                                final Authentication authentication) throws IOException {
+    public void onLogoutSuccess(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final Authentication authentication
+    ) throws IOException {
 
         System.out.println("로그아웃 성공");
 

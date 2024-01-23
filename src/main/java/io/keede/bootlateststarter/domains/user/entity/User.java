@@ -23,7 +23,10 @@ public class User {
 
     protected User() {}
 
-    public User(String username, String password) {
+    public User(
+            final String username,
+            final String password
+    ) {
         this.username = username;
         this.password = password;
     }

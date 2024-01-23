@@ -17,15 +17,21 @@ public class BootUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public BootUserDetailsService(final UserRepository userRepository) {
+    public BootUserDetailsService(
+            final UserRepository userRepository
+    ) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(
+            String username
+    ) throws UsernameNotFoundException {
         System.out.println("username = " + username);
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 사용자입니다."));
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("존재하지 않는 사용자입니다.")
+                );
 
         return new AuthenticationDetail(username, user.getPassword());
     }

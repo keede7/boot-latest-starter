@@ -7,17 +7,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 /**
-* @author keede
-* Created on 2023/08/22
-*/
+ * @author keede
+ * Created on 2023/08/22
+ */
 @Repository
 public class DataBaseInitializer {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public DataBaseInitializer(final UserRepository userRepository,
-                               final PasswordEncoder passwordEncoder) {
+    public DataBaseInitializer(
+            final UserRepository userRepository,
+            final PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

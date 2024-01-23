@@ -11,16 +11,18 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
-* @author keede
-* Created on 2023/09/10
-*/
+ * 로그인 성공 이후 처리에 대한 핸들러 역할
+ * @author keede
+ * Created on 2023/09/10
+ */
 public class BootAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) throws IOException, ServletException {
 
         System.out.println("authentication = " + authentication);
 

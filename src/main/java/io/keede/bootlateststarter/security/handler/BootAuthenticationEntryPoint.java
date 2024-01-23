@@ -11,15 +11,17 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
-* @author keede
-* Created on 2023/09/26
-*/
+ * @author keede
+ * Created on 2023/09/26
+ */
 public class BootAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(final HttpServletRequest request,
-                         final HttpServletResponse response,
-                         final AuthenticationException authException) throws IOException, ServletException {
+    public void commence(
+            final HttpServletRequest request,
+            final HttpServletResponse response,
+            final AuthenticationException authException
+    ) throws IOException, ServletException {
 
         System.out.println("authException = " + authException);
 
