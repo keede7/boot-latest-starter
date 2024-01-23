@@ -16,7 +16,10 @@ public class AuthenticationDetail extends User {
 
     private String username;
 
-    public AuthenticationDetail(String username, String password) {
+    public AuthenticationDetail(
+            final String username,
+            final String password
+    ) {
         this(
                 username,
                 password,
