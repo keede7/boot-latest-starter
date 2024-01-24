@@ -1,4 +1,4 @@
-package io.keede.bootlateststarter.security.config.jwt;
+package io.keede.bootlateststarter.security.v2.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
