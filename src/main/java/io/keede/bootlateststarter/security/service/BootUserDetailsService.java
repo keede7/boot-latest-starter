@@ -2,7 +2,6 @@ package io.keede.bootlateststarter.security.service;
 
 import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
 import io.keede.bootlateststarter.domains.user.entity.User;
-import io.keede.bootlateststarter.domains.user.entity.UserRepository;
 import io.keede.bootlateststarter.domains.user.service.UserReader;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

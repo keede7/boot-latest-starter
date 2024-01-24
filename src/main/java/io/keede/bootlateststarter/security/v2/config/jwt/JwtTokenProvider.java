@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
 import io.keede.bootlateststarter.domains.user.entity.User;
 import io.keede.bootlateststarter.domains.user.entity.UserRepository;
+import io.keede.bootlateststarter.security.v1.dto.LoginRequestDto;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -49,7 +50,7 @@ public final class JwtTokenProvider implements InitializingBean {
     }
 
     public Token createJwtToken(
-            AuthenticationDetail loginDto
+            final AuthenticationDetail loginDto
     ) {
 
         User user = this.userRepository.findUserByUsername(loginDto.getUsername())
@@ -82,7 +83,7 @@ public final class JwtTokenProvider implements InitializingBean {
     }
 
     public String bindAuthorizationToken(
-            String token
+            final String token
     ) {
         try {
             return Jwts.parser()

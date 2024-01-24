@@ -1,15 +1,16 @@
-package io.keede.bootlateststarter.security.v1.config;
+package io.keede.bootlateststarter.security.v2.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
 /**
-* @author keede
-* Created on 2023/08/22
-*/
-//@Configuration
+ * @author kyh
+ * Created on 2024/01/24
+ */
+@Configuration
 public class PasswordEncryptConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
