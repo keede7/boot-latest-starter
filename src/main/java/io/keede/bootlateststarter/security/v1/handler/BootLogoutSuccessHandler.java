@@ -1,4 +1,4 @@
-package io.keede.bootlateststarter.security.handler;
+package io.keede.bootlateststarter.security.v1.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

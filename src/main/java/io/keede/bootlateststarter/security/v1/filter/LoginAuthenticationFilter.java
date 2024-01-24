@@ -1,4 +1,4 @@
-package io.keede.bootlateststarter.security.filter;
+package io.keede.bootlateststarter.security.v1.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletInputStream;

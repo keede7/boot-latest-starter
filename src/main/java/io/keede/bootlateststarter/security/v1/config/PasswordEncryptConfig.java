@@ -1,4 +1,4 @@
-package io.keede.bootlateststarter.security.config;
+package io.keede.bootlateststarter.security.v1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

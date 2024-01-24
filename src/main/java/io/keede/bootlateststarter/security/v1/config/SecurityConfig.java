@@ -1,9 +1,9 @@
-package io.keede.bootlateststarter.security.config;
+package io.keede.bootlateststarter.security.v1.config;
 
-import io.keede.bootlateststarter.security.filter.LoginAuthenticationFilter;
-import io.keede.bootlateststarter.security.handler.BootAuthenticationEntryPoint;
-import io.keede.bootlateststarter.security.handler.BootAuthenticationSuccessHandler;
-import io.keede.bootlateststarter.security.handler.BootLogoutSuccessHandler;
+import io.keede.bootlateststarter.security.v1.filter.LoginAuthenticationFilter;
+import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationEntryPoint;
+import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationSuccessHandler;
+import io.keede.bootlateststarter.security.v1.handler.BootLogoutSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
