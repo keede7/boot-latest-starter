@@ -1,4 +1,4 @@
-package io.keede.bootlateststarter.security.v2.filter;
+package io.keede.bootlateststarter.security.v2.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
@@ -41,14 +41,16 @@ public class BootAuthenticationSuccessHandlerV2 implements AuthenticationSuccess
             Authentication authentication
     ) throws IOException, ServletException {
 
-        AuthenticationDetail principal = (AuthenticationDetail) authentication.getPrincipal();
+        // SampleController의 로그인 구현 로직과 비슷하게 들어간다.
 
-        Token jwtToken = jwtTokenProvider.createJwtToken(principal);
-
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        response.getWriter().println(this.objectMapper.writeValueAsString(jwtToken));
+//        AuthenticationDetail principal = (AuthenticationDetail) authentication.getPrincipal();
+//
+//        Token jwtToken = jwtTokenProvider.createJwtToken(principal);
+//
+//        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+//
+//        response.getWriter().println(this.objectMapper.writeValueAsString(jwtToken));
     }
 
 }

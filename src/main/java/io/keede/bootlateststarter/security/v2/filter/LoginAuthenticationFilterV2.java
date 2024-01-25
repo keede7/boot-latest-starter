@@ -1,7 +1,7 @@
 package io.keede.bootlateststarter.security.v2.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.keede.bootlateststarter.security.v2.dto.LoginRequestDto;
+import io.keede.bootlateststarter.security.v2.dto.LoginRequestDtoV2;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,9 +25,9 @@ import java.io.IOException;
  *
  * 로그인 요청에 대해 가장 먼저 처리한다.
  */
-public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class LoginAuthenticationFilterV2 extends AbstractAuthenticationProcessingFilter {
 
-    public LoginAuthenticationFilter(
+    public LoginAuthenticationFilterV2(
             final String defaultFilterProcessesUrl,
             final AuthenticationManager authenticationManager,
             final AuthenticationSuccessHandler authenticationSuccessHandler
@@ -57,13 +57,13 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 
         ServletInputStream inputStream = request.getInputStream();
 
-        LoginRequestDto loginRequestDto = new ObjectMapper()
-                .readValue(inputStream, LoginRequestDto.class);
+        LoginRequestDtoV2 loginRequestDtoV2 = new ObjectMapper()
+                .readValue(inputStream, LoginRequestDtoV2.class);
 
         return this.getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDto.username(),
-                        loginRequestDto.password()
+                        loginRequestDtoV2.username(),
+                        loginRequestDtoV2.password()
                 )
         );
     }

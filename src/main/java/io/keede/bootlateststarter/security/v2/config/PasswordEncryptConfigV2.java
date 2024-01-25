@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Created on 2024/01/24
  */
 @Configuration
-public class PasswordEncryptConfig {
+public class PasswordEncryptConfigV2 {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -1,11 +1,11 @@
 package io.keede.bootlateststarter.security.v2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.keede.bootlateststarter.security.v2.config.jwt.JwtFilter;
 import io.keede.bootlateststarter.security.v2.config.jwt.JwtTokenProvider;
-import io.keede.bootlateststarter.security.v2.filter.BootAuthenticationSuccessHandlerV2;
-import io.keede.bootlateststarter.security.v2.filter.LoginAuthenticationFilter;
+import io.keede.bootlateststarter.security.v2.handler.BootAuthenticationSuccessHandlerV2;
+import io.keede.bootlateststarter.security.v2.filter.LoginAuthenticationFilterV2;
 import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationEntryPoint;
-import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +14,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,7 +25,11 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
+import org.springframework.security.web.context.SecurityContextRepository;
 
+import static org.springframework.security.core.context.SecurityContextHolder.MODE_INHERITABLETHREADLOCAL;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 
@@ -30,16 +38,15 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
  * Created on 2024/01/24
  */
 @Configuration
-public class SecurityConfig {
+public class SecurityConfigV2 {
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ObjectMapper objectMapper;
 
     private static final String LOGIN_API_URI = "/api/login";
-    private static final String LOGOUT_API_URI = "/api/logout";
 
-    public SecurityConfig(
+    public SecurityConfigV2(
             final UserDetailsService userDetailsService,
             final JwtTokenProvider jwtTokenProvider,
             final ObjectMapper objectMapper
@@ -65,6 +72,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
                                 .requestMatchers(
+                                        antMatcher("/auth/**")
+                                ).hasRole("MEMBER")
+                                .requestMatchers(
+                                        antMatcher("/api/login")
+                                ).permitAll()
+                                .requestMatchers(
                                         antMatcher("/h2-console/**")
                                 ).permitAll()
                                 .requestMatchers(
@@ -73,11 +86,32 @@ public class SecurityConfig {
                                 .anyRequest().permitAll()
                 )
                 .addFilterAt(
-                        this.abstractAuthenticationProcessingFilter(
-                                authenticationManager,
-                                authenticationSuccessHandler()
-                        ),
+                        new JwtFilter(
+                                this.jwtTokenProvider,
+                                this.securityContext(),
+                                this.securityContextRepository()
+                                ),
                         UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterAt(
+                        this.securityContextHolderFilter(),
+                        SecurityContextHolderFilter.class
+                )
+                // NOTE : 시큐리티 필터를 통한 로그인을 할 경우 사용.
+//                .addFilterAt(
+//                        this.abstractAuthenticationProcessingFilter(
+//                                authenticationManager,
+//                                authenticationSuccessHandler()
+//                        ),
+//                        UsernamePasswordAuthenticationFilter.class
+//                )
+                // 현재 구현에서는 HttpSessionSecurityContextRepository를 SecurityContextRepository의 구현체로 사용하고 있기 떄문에
+                // 무상태 설정이 의미는 없다. => 클라이언트에서 화면에 로그인 한 사용자를 어떤정보를 통해 보여줘야할지 고민하다가 우선은 세션에 넣어두는 걸로 결정
+                .sessionManagement(
+                        httpSecuritySessionManagementConfigurer ->
+                                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
                 )
                 .exceptionHandling(exceptionConfigurer ->
                         exceptionConfigurer.authenticationEntryPoint(
@@ -99,7 +133,7 @@ public class SecurityConfig {
             final AuthenticationManager authenticationManager,
             final AuthenticationSuccessHandler authenticationSuccessHandler
     ) {
-        return new LoginAuthenticationFilter(
+        return new LoginAuthenticationFilterV2(
                 LOGIN_API_URI,
                 authenticationManager,
                 authenticationSuccessHandler
@@ -117,4 +151,22 @@ public class SecurityConfig {
         return new BootAuthenticationEntryPoint();
     }
 
+    // NOTE : SecurityContext 와 관련되어 사용되는 객체들이 실제 필터가 동작하는 과정에서는 새 객체가 사용되어
+    // SecurityContextHolder에 인증객체가 유지되지 않는다.
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
+    }
+
+    @Bean
+    public SecurityContext securityContext() {
+        return new SecurityContextImpl();
+    }
+
+    @Bean
+    public SecurityContextHolderFilter securityContextHolderFilter() {
+        return new SecurityContextHolderFilter(
+                this.securityContextRepository()
+        );
+    }
 }
