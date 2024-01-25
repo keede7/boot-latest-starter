@@ -35,3 +35,20 @@
 
 6) 인증실패 처리 구현
    - [Branch](https://github.com/keede7/boot-latest-starter/tree/filter/entryPoint)
+
+
+---
+
+### 로그인 + JWT
+
+잘 활용되는 방식은 아니겠지만, 만약 해당 방식으로 구현할 경우에는 특정 조건이 존재 할 것이다.
+
+1) 기획단계에서 이러한 방법을 요청했다.
+2) JWT를 활용함과 동시에 세션을 사용해서 구현을 해야했다.
+3) JWT 토큰으로 자동 로그인을 구현한다.
+
+등등,,
+
+---
+
+### OAuth2 + JWT

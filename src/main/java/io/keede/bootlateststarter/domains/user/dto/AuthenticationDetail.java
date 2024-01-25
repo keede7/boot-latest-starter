@@ -7,10 +7,10 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 import java.util.Collections;
 
+
 /**
- * Security 인증 객체
- * @author keede
- * Created on 2023/08/23
+ * @author kyh
+ * Created on 2024/01/24
  */
 public class AuthenticationDetail extends User {
 
