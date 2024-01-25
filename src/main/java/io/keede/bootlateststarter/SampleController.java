@@ -56,19 +56,19 @@ public class SampleController {
     }
 
     // NOTE : Presentation Layer에서 로그인을 구현할 경우 사용한다.
-    @PostMapping("/api/login2")
-    public ResponseEntity<Token> login(
-            @RequestBody LoginRequestDtoV2 loginRequestDtoV2,
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
-        Token jwtToken = this.jwtTokenProvider.createJwtToken(loginRequestDtoV2);
-
-        this.securityContext.setAuthentication(loginRequestDtoV2.toAuthenticationToken());
-        SecurityContextHolder.setContext(this.securityContext);
-        this.securityContextRepository.saveContext(this.securityContext, request, response);
-
-        return ResponseEntity.ok(jwtToken);
-    }
+//    @PostMapping("/api/login")
+//    public ResponseEntity<Token> login(
+//            @RequestBody LoginRequestDtoV2 loginRequestDtoV2,
+//            HttpServletRequest request,
+//            HttpServletResponse response
+//    ) {
+//        Token jwtToken = this.jwtTokenProvider.createJwtToken(loginRequestDtoV2);
+//
+//        this.securityContext.setAuthentication(loginRequestDtoV2.toAuthenticationToken());
+//        SecurityContextHolder.setContext(this.securityContext);
+//        this.securityContextRepository.saveContext(this.securityContext, request, response);
+//
+//        return ResponseEntity.ok(jwtToken);
+//    }
 
 }

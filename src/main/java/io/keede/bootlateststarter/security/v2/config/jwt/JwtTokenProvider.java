@@ -9,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
 import io.keede.bootlateststarter.domains.user.entity.User;
 import io.keede.bootlateststarter.domains.user.entity.UserRepository;
-import io.keede.bootlateststarter.security.v1.dto.LoginRequestDto;
 import io.keede.bootlateststarter.security.v2.dto.LoginRequestDtoV2;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,11 +49,46 @@ public final class JwtTokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    // NOTE : Presentation Layer를 통한 로그인을 할 떄 예시 코드
     public Token createJwtToken(
             final LoginRequestDtoV2 loginDto
     ) {
 
         User user = this.userRepository.findUserByUsername(loginDto.username())
+                .orElseThrow();
+
+        Date createdAt = new Date();
+
+        Date accessTokenExpiredTime = new Date(createdAt.getTime() + this.accessTokenValidityInMilliseconds);
+        Date refreshTokenExpiredTime = new Date(createdAt.getTime() + this.refreshTokenValidityInMilliseconds);
+
+        // TODO : password 유효성 검사
+        String accessToken = Jwts.builder()
+                .issuedAt(createdAt)
+                .signWith(this.key, Jwts.SIG.HS256)
+                .issuer(user.getUsername())
+                .expiration(accessTokenExpiredTime)
+                .compact();
+
+        String refreshToken = Jwts.builder()
+                .issuedAt(createdAt)
+                .signWith(this.key, Jwts.SIG.HS256)
+                .issuer(user.getUsername())
+                .expiration(refreshTokenExpiredTime)
+                .compact();
+
+        return new Token(
+                accessToken,
+                refreshToken
+        );
+    }
+
+    // NOTE : Security Filter를 통한 로그인을 할 떄 예시 코드
+    public Token createJwtToken(
+            final AuthenticationDetail loginDto
+    ) {
+
+        User user = this.userRepository.findUserByUsername(loginDto.getUsername())
                 .orElseThrow();
 
         Date createdAt = new Date();

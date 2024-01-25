@@ -1,11 +1,11 @@
 package io.keede.bootlateststarter.security.v2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationEntryPoint;
 import io.keede.bootlateststarter.security.v2.config.jwt.JwtFilter;
 import io.keede.bootlateststarter.security.v2.config.jwt.JwtTokenProvider;
-import io.keede.bootlateststarter.security.v2.handler.BootAuthenticationSuccessHandlerV2;
 import io.keede.bootlateststarter.security.v2.filter.LoginAuthenticationFilterV2;
-import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationEntryPoint;
+import io.keede.bootlateststarter.security.v2.handler.BootAuthenticationSuccessHandlerV2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,8 +15,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -25,11 +23,9 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 
-import static org.springframework.security.core.context.SecurityContextHolder.MODE_INHERITABLETHREADLOCAL;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 
@@ -87,6 +83,7 @@ public class SecurityConfigV2 {
                 )
                 .addFilterAt(
                         new JwtFilter(
+                                LOGIN_API_URI,
                                 this.jwtTokenProvider,
                                 this.securityContext(),
                                 this.securityContextRepository()
@@ -98,13 +95,13 @@ public class SecurityConfigV2 {
                         SecurityContextHolderFilter.class
                 )
                 // NOTE : 시큐리티 필터를 통한 로그인을 할 경우 사용.
-//                .addFilterAt(
-//                        this.abstractAuthenticationProcessingFilter(
-//                                authenticationManager,
-//                                authenticationSuccessHandler()
-//                        ),
-//                        UsernamePasswordAuthenticationFilter.class
-//                )
+                .addFilterAt(
+                        this.abstractAuthenticationProcessingFilter(
+                                authenticationManager,
+                                authenticationSuccessHandler()
+                        ),
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 // 현재 구현에서는 HttpSessionSecurityContextRepository를 SecurityContextRepository의 구현체로 사용하고 있기 떄문에
                 // 무상태 설정이 의미는 없다. => 클라이언트에서 화면에 로그인 한 사용자를 어떤정보를 통해 보여줘야할지 고민하다가 우선은 세션에 넣어두는 걸로 결정
                 .sessionManagement(
@@ -163,6 +160,7 @@ public class SecurityConfigV2 {
         return new SecurityContextImpl();
     }
 
+    // SecurityContextPersistenceFilter 가 사용되지 않게 되면서 내부 구현체가 다르게 사용됨을 확인.
     @Bean
     public SecurityContextHolderFilter securityContextHolderFilter() {
         return new SecurityContextHolderFilter(
