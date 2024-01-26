@@ -22,9 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.context.SecurityContextHolderFilter;
-import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.context.*;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -152,7 +150,10 @@ public class SecurityConfigV2 {
     // SecurityContextHolder에 인증객체가 유지되지 않는다.
     @Bean
     public SecurityContextRepository securityContextRepository() {
-        return new HttpSessionSecurityContextRepository();
+        return new DelegatingSecurityContextRepository(
+                new HttpSessionSecurityContextRepository(),
+                new RequestAttributeSecurityContextRepository()
+        );
     }
 
     @Bean
