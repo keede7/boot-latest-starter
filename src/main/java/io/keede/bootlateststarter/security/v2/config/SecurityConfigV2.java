@@ -1,10 +1,10 @@
 package io.keede.bootlateststarter.security.v2.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.keede.bootlateststarter.security.v1.handler.BootAuthenticationEntryPoint;
 import io.keede.bootlateststarter.security.v2.config.jwt.JwtFilter;
 import io.keede.bootlateststarter.security.v2.config.jwt.JwtTokenProvider;
 import io.keede.bootlateststarter.security.v2.filter.LoginAuthenticationFilterV2;
+import io.keede.bootlateststarter.security.v2.handler.BootAuthenticationEntryPointV2;
 import io.keede.bootlateststarter.security.v2.handler.BootAuthenticationSuccessHandlerV2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,9 +69,6 @@ public class SecurityConfigV2 {
                                         antMatcher("/auth/**")
                                 ).hasRole("MEMBER")
                                 .requestMatchers(
-                                        antMatcher("/api/login")
-                                ).permitAll()
-                                .requestMatchers(
                                         antMatcher("/h2-console/**")
                                 ).permitAll()
                                 .requestMatchers(
@@ -99,14 +96,6 @@ public class SecurityConfigV2 {
                                 authenticationSuccessHandler()
                         ),
                         UsernamePasswordAuthenticationFilter.class
-                )
-                // 현재 구현에서는 HttpSessionSecurityContextRepository를 SecurityContextRepository의 구현체로 사용하고 있기 떄문에
-                // 무상태 설정이 의미는 없다. => 클라이언트에서 화면에 로그인 한 사용자를 어떤정보를 통해 보여줘야할지 고민하다가 우선은 세션에 넣어두는 걸로 결정
-                .sessionManagement(
-                        httpSecuritySessionManagementConfigurer ->
-                                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
                 )
                 .exceptionHandling(exceptionConfigurer ->
                         exceptionConfigurer.authenticationEntryPoint(
@@ -143,7 +132,7 @@ public class SecurityConfigV2 {
     }
 
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new BootAuthenticationEntryPoint();
+        return new BootAuthenticationEntryPointV2();
     }
 
     // NOTE : SecurityContext 와 관련되어 사용되는 객체들이 실제 필터가 동작하는 과정에서는 새 객체가 사용되어
