@@ -119,7 +119,9 @@ public final class JwtTokenProvider implements InitializingBean {
         );
     }
 
-    public Authentication toAuthentication(String issuer) {
+    public Authentication toAuthentication(
+            final String issuer
+    ) {
         User user = this.userReader.findUserByUsername(issuer);
 
         return new UsernamePasswordAuthenticationToken(
