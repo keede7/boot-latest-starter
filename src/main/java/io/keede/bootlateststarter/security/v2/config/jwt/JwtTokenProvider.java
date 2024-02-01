@@ -8,13 +8,17 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
 import io.keede.bootlateststarter.domains.user.entity.User;
-import io.keede.bootlateststarter.domains.user.entity.UserRepository;
+import io.keede.bootlateststarter.domains.user.service.UserReader;
 import io.keede.bootlateststarter.security.v2.dto.LoginRequestDtoV2;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -24,20 +28,20 @@ import java.util.Date;
 @Component
 public final class JwtTokenProvider implements InitializingBean {
 
-    private final UserRepository userRepository;
+    private final UserReader userReader;
     private final String secret;
     private final long accessTokenValidityInMilliseconds;
     private final long refreshTokenValidityInMilliseconds;
     private SecretKey key;
 
     public JwtTokenProvider(
-            final UserRepository userRepository,
+            final UserReader userReader,
             @Value("#{environment['jwt.secret']}")
             final String secret,
             @Value("#{environment['jwt.token-validity-in-seconds']}")
             final long tokenValidityInSeconds
     ) {
-        this.userRepository = userRepository;
+        this.userReader = userReader;
         this.secret = secret;
         this.accessTokenValidityInMilliseconds = tokenValidityInSeconds * 1000; // 토큰 만료시간에 사용,
         this.refreshTokenValidityInMilliseconds = tokenValidityInSeconds * 5000;
@@ -54,8 +58,7 @@ public final class JwtTokenProvider implements InitializingBean {
             final LoginRequestDtoV2 loginDto
     ) {
 
-        User user = this.userRepository.findUserByUsername(loginDto.username())
-                .orElseThrow();
+        User user = this.userReader.findUserByUsername(loginDto.username());
 
         Date createdAt = new Date();
 
@@ -88,8 +91,7 @@ public final class JwtTokenProvider implements InitializingBean {
             final AuthenticationDetail loginDto
     ) {
 
-        User user = this.userRepository.findUserByUsername(loginDto.getUsername())
-                .orElseThrow();
+        User user = this.userReader.findUserByUsername(loginDto.getUsername());
 
         Date createdAt = new Date();
 
@@ -114,6 +116,18 @@ public final class JwtTokenProvider implements InitializingBean {
         return new Token(
                 accessToken,
                 refreshToken
+        );
+    }
+
+    public Authentication toAuthentication(String issuer) {
+        User user = this.userReader.findUserByUsername(issuer);
+
+        return new UsernamePasswordAuthenticationToken(
+                user.getUsername(),
+                user.getPassword(),
+                Collections.singletonList(
+                        new SimpleGrantedAuthority("ROLE_MEMBER")
+                )
         );
     }
 
