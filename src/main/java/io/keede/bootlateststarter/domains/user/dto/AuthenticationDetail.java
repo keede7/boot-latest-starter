@@ -18,13 +18,14 @@ public class AuthenticationDetail extends User {
 
     public AuthenticationDetail(
             final String username,
-            final String password
+            final String password,
+            final String role
     ) {
         this(
                 username,
                 password,
                 Collections.singletonList(
-                        new SimpleGrantedAuthority("ROLE_MEMBER")
+                        new SimpleGrantedAuthority(role)
                 )
         );
         this.username = username;
