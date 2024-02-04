@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -82,7 +81,7 @@ public class SecurityConfigV2 {
                                 this.jwtTokenProvider,
                                 this.securityContext(),
                                 this.securityContextRepository()
-                                ),
+                        ),
                         UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterAt(

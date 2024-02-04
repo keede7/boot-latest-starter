@@ -1,5 +1,6 @@
 package io.keede.bootlateststarter.domains.user.entity;
 
+import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
 import jakarta.persistence.*;
 
 /**
@@ -41,5 +42,13 @@ public class User {
 
     public String getPassword() {
         return this.password;
+    }
+
+    public AuthenticationDetail toAuthenticationDetail() {
+        return new AuthenticationDetail(
+                this.username,
+                this.password,
+                "ROLE_MEMBER"
+        );
     }
 }

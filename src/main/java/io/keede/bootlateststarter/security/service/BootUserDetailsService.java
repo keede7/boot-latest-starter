@@ -1,6 +1,5 @@
 package io.keede.bootlateststarter.security.service;
 
-import io.keede.bootlateststarter.domains.user.dto.AuthenticationDetail;
 import io.keede.bootlateststarter.domains.user.entity.User;
 import io.keede.bootlateststarter.domains.user.service.UserReader;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,9 +26,8 @@ public class BootUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(
             String username
     ) throws UsernameNotFoundException {
-        System.out.println("username = " + username);
         User user = this.userReader.findUserByUsername(username);
 
-        return new AuthenticationDetail(username, user.getPassword());
+        return user.toAuthenticationDetail();
     }
 }
