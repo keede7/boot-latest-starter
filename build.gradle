@@ -23,13 +23,15 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 //    developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-    runtimeOnly 'com.h2database:h2'
-    runtimeOnly "mysql:mysql-connector-java"
+    implementation 'com.h2database:h2:1.4.200'
+//    implementation "mysql:mysql-connector-java"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

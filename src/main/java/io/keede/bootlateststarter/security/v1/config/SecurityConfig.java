@@ -26,7 +26,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
  * @author keede
  * Created on 2023/08/15
  */
-//@Configuration
+@Configuration
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
@@ -117,20 +117,6 @@ public class SecurityConfig {
                 authenticationSuccessHandler
         );
     }
-
-    /*
-        This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-     */
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        // 정적 리소스 spring security 대상에서 제외
-//        return (web) -> web
-//                .ignoring()
-//                .requestMatchers(
-//                        PathRequest.toStaticResources()
-//                                .atCommonLocations()
-//                );
-//    }
 
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new BootAuthenticationSuccessHandler();

@@ -21,7 +21,7 @@ public class BootAuthenticationEntryPoint implements AuthenticationEntryPoint {
             final HttpServletRequest request,
             final HttpServletResponse response,
             final AuthenticationException authException
-    ) throws IOException, ServletException {
+    ) throws IOException {
 
         System.out.println("authException = " + authException);
 

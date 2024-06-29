@@ -30,7 +30,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
  * @author kyh
  * Created on 2024/01/24
  */
-@Configuration
+//@Configuration
 public class SecurityConfigV2 {
 
     private final UserDetailsService userDetailsService;

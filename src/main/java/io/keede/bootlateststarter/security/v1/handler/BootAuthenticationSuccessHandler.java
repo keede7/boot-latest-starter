@@ -22,7 +22,7 @@ public class BootAuthenticationSuccessHandler implements AuthenticationSuccessHa
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
-    ) throws IOException, ServletException {
+    ) throws IOException {
 
         System.out.println("authentication = " + authentication);
 

@@ -21,6 +21,9 @@ spring:
       hibernate:
         format_sql: true
 
+  profiles:
+    include: oauth
+
 jwt:
   secret: keedeTravelyApplicationJwtSecretKeyPropertiesByLocal
   token-validity-in-seconds: 300
