@@ -12,6 +12,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -23,6 +32,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 /**
  * Security 전체 설정부
+ *
  * @author keede
  * Created on 2023/08/15
  */
@@ -30,14 +40,17 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
+    private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
 
     private static final String LOGIN_API_URI = "/api/login";
     private static final String LOGOUT_API_URI = "/api/logout";
 
     public SecurityConfig(
-            final UserDetailsService userDetailsService
+            final UserDetailsService userDetailsService,
+            final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService
     ) {
         this.userDetailsService = userDetailsService;
+        this.oAuth2UserService = oAuth2UserService;
     }
 
     @Bean
@@ -72,6 +85,9 @@ public class SecurityConfig {
                                         antMatcher("/h2-console/**")
                                 ).permitAll()
                                 .requestMatchers(
+                                        antMatcher("/login")
+                                ).permitAll()
+                                .requestMatchers(
                                         antMatcher("/admin/**")
                                 ).hasRole("ADMIN")
                                 .anyRequest().permitAll()
@@ -102,9 +118,36 @@ public class SecurityConfig {
                                         .frameOptions(
                                                 HeadersConfigurer.FrameOptionsConfig::sameOrigin
                                         )
-                );
+                )
+                .oauth2Login(
+                        oauth2Login ->
+                                oauth2Login.userInfoEndpoint(
+                                        endpoint -> endpoint.userService(this.oAuth2UserService)
+                                )
+                )
+        ;
 
         return http.build();
+    }
+
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
+    }
+
+    private ClientRegistration googleClientRegistration() {
+        return ClientRegistration.withRegistrationId("google")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("http://localhost:8080/login/oauth2/code/google")
+                .scope("openid", "profile", "email", "address", "phone")
+                .authorizationUri("https://accounts.google.com/o/oauth2/v2/auth")
+                .tokenUri("https://www.googleapis.com/oauth2/v4/token")
+                .userInfoUri("https://www.googleapis.com/oauth2/v3/userinfo")
+                .userNameAttributeName(IdTokenClaimNames.SUB)
+                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
+                .clientName("Google")
+                .build();
     }
 
     public AbstractAuthenticationProcessingFilter abstractAuthenticationProcessingFilter(

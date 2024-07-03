@@ -28,4 +28,9 @@ public class SampleController {
         return "로그인 완료";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 }
